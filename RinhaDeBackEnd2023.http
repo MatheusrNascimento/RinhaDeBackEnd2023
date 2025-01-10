@@ -1,0 +1,6 @@
+@RinhaDeBackEnd2023_HostAddress = http://localhost:5095
+
+GET {{RinhaDeBackEnd2023_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
