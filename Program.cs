@@ -1,6 +1,7 @@
 using FluentValidation.Results;
 using RinhaDeBackEnd2023.Business.FluentValidations;
 using RinhaDeBackEnd2023.Models.JsonRequest;
+using RinhaDeBackEnd2023.Repository;
 
 namespace RinhaDeBackEnd2023
 {
