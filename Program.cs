@@ -1,6 +1,7 @@
 using FluentValidation.Results;
 using RinhaDeBackEnd2023.Business.FluentValidations;
 using RinhaDeBackEnd2023.Models.JsonRequest;
+using RinhaDeBackEnd2023.Models;
 using RinhaDeBackEnd2023.Repository;
 
 namespace RinhaDeBackEnd2023
@@ -25,7 +26,10 @@ namespace RinhaDeBackEnd2023
 
             app.MapPost("/Pessoas", (HttpContext context, PersonJsonRequest pessoa) =>
             {
-                ValidationResult result = new ValidateJsonRequest().Validate(pessoa);
+
+                Person person = Mapper.MapperJsonRequest.MapPersonFromJsonRequest(pessoa);
+
+                ValidationResult result = new ValidateJsonRequest().Validate(person);
 
                 if (!result.IsValid)
                 {
