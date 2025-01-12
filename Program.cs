@@ -3,6 +3,7 @@ using RinhaDeBackEnd2023.Business.FluentValidations;
 using RinhaDeBackEnd2023.Models.JsonRequest;
 using RinhaDeBackEnd2023.Models;
 using RinhaDeBackEnd2023.Repository;
+using RinhaDeBackEnd2023.Business;
 
 namespace RinhaDeBackEnd2023
 {
@@ -39,7 +40,9 @@ namespace RinhaDeBackEnd2023
                     });
                 }
 
-                context.Response.Headers.Append("Lacation", $"/pessoas/{1}");
+                PersonTRA.InsertNewPerson(person);
+
+                context.Response.Headers.Append("Lacation", $"/pessoas/{person.Id}");
 
                 return Results.Created();
             });
