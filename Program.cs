@@ -28,9 +28,7 @@ namespace RinhaDeBackEnd2023
             app.MapPost("/Pessoas", (HttpContext context, PersonJsonRequest pessoa) =>
             {
 
-                Person person = Mapper.MapperJsonRequest.MapPersonFromJsonRequest(pessoa);
-
-                ValidationResult result = new ValidateJsonRequest().Validate(person);
+                ValidationResult result = new ValidateJsonRequest().Validate(pessoa);
 
                 if (!result.IsValid)
                 {
@@ -39,6 +37,8 @@ namespace RinhaDeBackEnd2023
                         Errors = result.Errors.Select(e => e.ErrorMessage),
                     });
                 }
+
+                Person person = Mapper.MapperJsonRequest.MapPersonFromJsonRequest(pessoa);
 
                 PersonTRA.InsertNewPerson(person);
 
