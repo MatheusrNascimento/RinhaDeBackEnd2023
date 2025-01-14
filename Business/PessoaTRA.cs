@@ -5,16 +5,16 @@ using RinhaDeBackEnd2023.Repository;
 
 namespace RinhaDeBackEnd2023.Business
 {
-    public class PersonTRA
+    public class PessoaTRA
     {
         private static readonly MongoClient _client  = new MongoClient("mongodb+srv://matheusrodriguesnascimento92:WiCsogaL9pChPpcD@typescriptapi.7z20b.mongodb.net/client");
-        public static async Task InsertNewPerson(Person person)
+        public static async Task InsertNewPerson(Pessoa person)
         {
             try
             {
                 var database = _client.GetDatabase("RinhaDeBackend2023");
 
-                var personRepository = new MongoRepository<Person>(database, "Person");
+                var personRepository = new MongoRepository<Pessoa>(database, "Person");
 
                 await personRepository.InsertAsync(person);
             }
@@ -24,14 +24,14 @@ namespace RinhaDeBackEnd2023.Business
             }
         }
 
-        public static async Task<Person> GetPersonById(string id) 
+        public static async Task<Pessoa> GetPersonById(string id) 
         {
             try
             {
                 var database = _client.GetDatabase("RinhaDeBackend2023");
-                var repository = new MongoRepository<Person>(database, "Person");
+                var repository = new MongoRepository<Pessoa>(database, "Person");
 
-                Person person = await repository.FindOneAsync(person => person.Id == Guid.Parse(id));
+                Pessoa person = await repository.FindOneAsync(person => person.Id == Guid.Parse(id));
 
                 return person;
             }

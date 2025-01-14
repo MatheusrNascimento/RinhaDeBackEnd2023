@@ -25,7 +25,7 @@ namespace RinhaDeBackEnd2023
 
             app.UseAuthorization();
 
-            app.MapPost("/pessoas", async (HttpContext context, PersonJsonRequest pessoa) => {
+            app.MapPost("/pessoas", async (HttpContext context, PessoaJsonRequest pessoa) => {
 
                 ValidationResult result = new ValidateJsonRequest().Validate(pessoa);
 
@@ -37,9 +37,9 @@ namespace RinhaDeBackEnd2023
                     });
                 }
 
-                Person person = Mapper.MapperJsonRequest.MapPersonFromJsonRequest(pessoa);
+                Pessoa person = Mapper.MapperJsonRequest.MapPersonFromJsonRequest(pessoa);
 
-                await PersonTRA.InsertNewPerson(person);
+                await PessoaTRA.InsertNewPerson(person);
 
                 context.Response.Headers.Append("Lacation", $"/pessoas/{person.Id}");
 
@@ -47,7 +47,7 @@ namespace RinhaDeBackEnd2023
             });
 
             app.MapGet("/pessoas/{id}", async (string id) => {
-                    Person person = await PersonTRA.GetPersonById(id);
+                    Pessoa person = await PessoaTRA.GetPersonById(id);
 
                     if (person is null)
                         return Results.Ok();

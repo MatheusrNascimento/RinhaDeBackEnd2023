@@ -2,7 +2,7 @@
 
 namespace RinhaDeBackEnd2023.Models.JsonRequest
 {
-    public class PersonJsonRequest
+    public class PessoaJsonRequest
     {
         public string apelido { get; set; }
         public string nome { get; set; }
