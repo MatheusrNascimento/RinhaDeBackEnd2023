@@ -1,0 +1,46 @@
+services:
+  api:
+    container_name: rinhaincompleta2023
+    build: 
+      dockerfile: .
+      context: .
+    ports:
+      - 5672:8080
+    environment:
+      - ASPNETCORE_ENVIROMENT=Production
+    depends_on: ["mongo-rinha2023"]
+    networks:
+      rinha2023network:
+
+  mongo-rinha2023:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: theusdev
+      MONGO_INITDB_ROOT_PASSWORD: Picole123
+    volumes:
+      - "mongo-rinha2023:/data/db"
+    networks: 
+      rinha2023network:
+        aliases:
+          - "mongodb-rinha2023"
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    depends_on: ["mongo-rinha2023"]
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: Picole123
+      ME_CONFIG_MONGODB_URL: mongodb://theusdev:Picole123@mongo-rinha2023:27017/
+      ME_CONFIG_BASICAUTH: false 
+
+networks:
+  rinha2023network:
+    driver: bridge
+
+volumes:
+  monfo-rinha2023:
+    driver: local
