@@ -7,7 +7,7 @@ namespace RinhaDeBackEnd2023.Business
 {
     public class PessoaTRA
     {
-        private static readonly MongoClient _client  = new MongoClient("mongodb+srv://matheusrodriguesnascimento92:WiCsogaL9pChPpcD@typescriptapi.7z20b.mongodb.net/client");
+        private static readonly MongoClient _client  = new MongoClient(Environment.GetEnvironmentVariable("MONGO_URL"));
         public static async Task InsertNewPerson(Pessoa person)
         {
             try
