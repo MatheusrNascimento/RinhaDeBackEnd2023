@@ -1,30 +1,24 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
+# Cria um ambiente com a imagem abaixo de SDK dotnet para conseguir publicar a api
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+# Se posiciona dentro da pasta /app no meu container
 WORKDIR /app
+
+# Vai copiar o que está dentro da mesma pasta do dockerfile e jogar para a pasta /app do container
+COPY . ./
+
+# Roda um comando dotnet usado para recuperar os pacotes usados pela api
+RUN dotnet restore
+RUN dotnet publish -c Release -o out
+
+# A parte a cima serve para configurar o ambiente para que seja possivel publicar a api na pasta /out do container por isso é existe o from nos comandos para ter o sdk de desenvolvimento e conseguir rodar os 2 comandos dotnet, já a parte abaixo será as configurações para rodar a api no container, onde é usado os runtimes do dotnet
+
+# Cria um ambiente final com a imagem abaixo de runtime para que seja possivel rodar a api no container
+FROM FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+# Cria e se localiza dentro da pasta /runtime-app
+WORKDIR /runtime-app
+# Pega as dlls publicadas por o ambiente de build-env para rodar a api
+COPY --from=build-env /app/out .
+
+#
 EXPOSE 8080
-EXPOSE 8081
-
-
-# This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["RinhaDeBackEnd2023.csproj", "."]
-RUN dotnet restore "./RinhaDeBackEnd2023.csproj"
-COPY . .
-WORKDIR "/src/."
-RUN dotnet build "./RinhaDeBackEnd2023.csproj" -c $BUILD_CONFIGURATION -o /app/build
-
-# This stage is used to publish the service project to be copied to the final stage
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./RinhaDeBackEnd2023.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "RinhaDeBackEnd2023.dll"]
+ENTRYPOINT ["dotnet", "RinhaDebackEnd2023.dll"]
