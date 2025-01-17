@@ -15,10 +15,13 @@ services:
 
   mongo-rinha2023:
     image: mongo
+    container_name: mongo-rinha2023
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: theusdev
       MONGO_INITDB_ROOT_PASSWORD: Picole123
+    ports:
+      - 27017:27017
     volumes:
       - "mongo-rinha2023:/data/db"
     networks: 
