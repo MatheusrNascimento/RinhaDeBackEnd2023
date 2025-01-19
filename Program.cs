@@ -16,13 +16,10 @@ namespace RinhaDeBackEnd2023
             // Add services to the container.
             builder.Services.AddAuthorization();
 
-
             var app = builder.Build();
-
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
             app.MapPost("/pessoas", async (HttpContext context, PessoaJsonRequest pessoa) => {
