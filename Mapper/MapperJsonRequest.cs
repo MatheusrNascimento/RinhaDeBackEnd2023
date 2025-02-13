@@ -1,12 +1,12 @@
 using RinhaDeBackEnd2023.Models;
-using RinhaDeBackEnd2023.Models.JsonRequest;
-
+using RinhaDeBackEnd2023.Models.DTOs;
 
 namespace RinhaDeBackEnd2023.Mapper
 {
     public class MapperJsonRequest
     {
-        public static Pessoa MapPersonFromJsonRequest(PessoaJsonRequest personJsonRequest)
+        
+        public static Pessoa MapPersonFromJsonRequest(PessoaDTO personJsonRequest)
         {
             return new Pessoa
             (

@@ -1,41 +1,59 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using RinhaDeBackEnd2023.Models;
+using RinhaDeBackEnd2023.Models.DTOs;
 using RinhaDeBackEnd2023.Repository;
+using RinhaDeBackEnd2023.Repository.Interfaces;
 
 namespace RinhaDeBackEnd2023.Business
 {
     public class PessoaTRA
     {
-        private static readonly MongoClient _client  = new MongoClient(Environment.GetEnvironmentVariable("MONGO_URL"));
-        public static async Task InsertNewPerson(Pessoa person)
+        private readonly IRedisCacheRepository _cacheService;
+        private readonly MongoClient _mongoClient;
+
+        public PessoaTRA(IRedisCacheRepository redisCacheRepository)
+        {
+            _cacheService = redisCacheRepository;
+            _mongoClient = new MongoClient(Environment.GetEnvironmentVariable("MONGO_URL"));
+        }
+
+        public async Task InsertNewPerson(Pessoa person)
         {
             try
             {
-                var database = _client.GetDatabase("RinhaDeBackend2023");
+                var database = _mongoClient.GetDatabase("RinhaDeBackend2023");
 
                 var personRepository = new MongoRepository<Pessoa>(database, "Person");
 
                 await personRepository.InsertAsync(person);
+
+                if (await _cacheService.GetAsync<Pessoa>(person.Id.ToString()) is not null)
+                    return;
+
+                _cacheService.SetAsync(person.Id.ToString(), person, TimeSpan.FromMinutes(1000));
             }
-            catch( Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 
-        public static async Task<Pessoa> GetPersonById(string id) 
+        public async Task<Pessoa> GetPersonById(string id)
         {
             try
             {
-                var database = _client.GetDatabase("RinhaDeBackend2023");
+                PessoaDTO pessoa = await _cacheService.GetAsync<PessoaDTO>(id);
+                
+                if (pessoa is not null)
+                    return new Pessoa(pessoa.apelido, pessoa.nome, pessoa.nascimento, pessoa.stack);
+
+                var database = _mongoClient.GetDatabase("RinhaDeBackend2023");
                 var repository = new MongoRepository<Pessoa>(database, "Person");
-
-                Pessoa person = await repository.FindOneAsync(person => person.Id == Guid.Parse(id));
-
-                return person;
+                
+                return await repository.FindOneAsync(person => person.Id == Guid.Parse(id));
             }
-            catch(Exception)
+            catch (Exception ex)
             {
                 return null;
             }

@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
-using RinhaDeBackEnd2023.Models;
-using RinhaDeBackEnd2023.Models.JsonRequest;
+using RinhaDeBackEnd2023.Models.DTOs;
 using System.Globalization;
 
 namespace RinhaDeBackEnd2023.Business.FluentValidations
 {
-    public class ValidateJsonRequest : AbstractValidator<PessoaJsonRequest>
+    public class ValidateJsonRequest : AbstractValidator<PessoaDTO>
     {
         public ValidateJsonRequest()
         {
