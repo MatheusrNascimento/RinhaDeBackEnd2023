@@ -1,7 +1,7 @@
 services:
   api-rinha2023:
     container_name: rinhaincompleta2023
-    build: 
+    build:
       dockerfile: Dockerfile
       context: .
     ports:
@@ -9,25 +9,38 @@ services:
     environment:
       - ASPNETCORE_ENVIROMENT=Production
       - MONGO_URL=mongodb://theusdev:Picole123@mongodb-rinha2023:27017/
-    depends_on: ["mongo-rinha2023"]
+    depends_on: ["mongo-rinha2023", "redis-cache"]
+    networks:
+       rinha2023network:
+
+  redis-cache:
+    image: redis
+    container_name: redis-rinha
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis-rinha2023:/data"
     networks:
       rinha2023network:
+       aliases:
+         - "redis-rinha2023"
+
 
   mongo-rinha2023:
     image: mongo
     container_name: mongo-rinha2023
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: theusdev
-      MONGO_INITDB_ROOT_PASSWORD: Picole123
+     MONGO_INITDB_ROOT_USERNAME: theusdev
+     MONGO_INITDB_ROOT_PASSWORD: Picole123
     ports:
-      - 27017:27017
+     - 27017:27017
     volumes:
-      - "mongo-rinha2023:/data/db"
-    networks: 
-      rinha2023network:
-        aliases:
-          - "mongodb-rinha2023"
+     - "mongo-rinha2023:/data/db"
+    networks:
+     rinha2023network:
+       aliases:
+         - "mongodb-rinha2023"
 
   # mongo-express:
   #   image: mongo-express
@@ -41,10 +54,14 @@ services:
   #     ME_CONFIG_MONGODB_URL: mongodb://theusdev:Picole123@mongo-rinha2023:27017/
   #     ME_CONFIG_BASICAUTH: false
 
+
+
 networks:
   rinha2023network:
     driver: bridge
 
 volumes:
   mongo-rinha2023:
+    driver: local
+  redis-rinha2023:
     driver: local
