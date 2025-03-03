@@ -87,6 +87,8 @@ namespace RinhaDeBackEnd2023
                 }
             });
 
+            app.MapGet("/ping", () => Results.Ok("pong"));
+
             app.Run();
         }
     }
