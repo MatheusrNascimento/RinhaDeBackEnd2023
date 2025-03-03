@@ -24,7 +24,7 @@ namespace RinhaDeBackEnd2023.Business
             {
                 var database = _mongoClient.GetDatabase("RinhaDeBackend2023");
 
-                var personRepository = new MongoRepository<Pessoa>(database, "Person");
+                var personRepository = new PersonMongoRepository(database, "Person");
 
                 await personRepository.InsertAsync(person);
 
@@ -49,7 +49,7 @@ namespace RinhaDeBackEnd2023.Business
                     return new Pessoa(pessoa.apelido, pessoa.nome, pessoa.nascimento, pessoa.stack);
 
                 var database = _mongoClient.GetDatabase("RinhaDeBackend2023");
-                var repository = new MongoRepository<Pessoa>(database, "Person");
+                var repository = new PersonMongoRepository(database, "Person");
                 
                 return await repository.FindOneAsync(person => person.Id == Guid.Parse(id));
             }
