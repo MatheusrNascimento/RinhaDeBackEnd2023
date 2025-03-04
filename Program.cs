@@ -76,10 +76,12 @@ namespace RinhaDeBackEnd2023
                 }
             });
 
-            app.MapGet("/pessoas/t={t}", async (string t) => {
-                try{
-                    
-                    return Results.Ok();
+            app.MapGet("/pessoas/t={t}", async ( IRedisCacheRepository _cache, string t) => {
+                try
+                {
+                    IEnumerable<Pessoa> pessoa = await new PessoaTRA(_cache).GetPersonByTag(t);
+
+                    return Results.Ok(pessoa);
                 }
                 catch (Exception)
                 {

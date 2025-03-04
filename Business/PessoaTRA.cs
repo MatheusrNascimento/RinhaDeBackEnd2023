@@ -18,6 +18,8 @@ namespace RinhaDeBackEnd2023.Business
             _mongoClient = new MongoClient(Environment.GetEnvironmentVariable("MONGO_URL"));
         }
 
+        public PessoaTRA() {}
+
         public async Task InsertNewPerson(Pessoa person)
         {
             try
@@ -52,6 +54,21 @@ namespace RinhaDeBackEnd2023.Business
                 var repository = new PersonMongoRepository(database, "Person");
                 
                 return await repository.FindOneAsync(person => person.Id == Guid.Parse(id));
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<Pessoa>> GetPersonByTag(string tag)
+        {
+            try
+            {
+                var database = _mongoClient.GetDatabase("RinhaDeBackend2023");
+                var repository = new PersonMongoRepository(database, "Person");
+
+                return await repository.FindPersonByTagAsync(tag);
             }
             catch (Exception ex)
             {
