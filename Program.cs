@@ -23,12 +23,23 @@ namespace RinhaDeBackEnd2023
             builder.Services.AddSingleton<PessoaTRA>();
             builder.Services.AddAuthorization();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
 
             // Add services to the container.
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.
 
+            app.UseCors("AllowAll");
             app.UseHttpsRedirection();
             app.UseAuthorization();
 
