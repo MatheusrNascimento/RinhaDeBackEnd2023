@@ -7,20 +7,18 @@ using RinhaDeBackEnd2023.Repository.Interfaces;
 
 namespace RinhaDeBackEnd2023.Business
 {
-    public class PessoaTRA
+    public class PersonTRA
     {
         private readonly IRedisCacheRepository _cacheService;
         private readonly MongoClient _mongoClient;
 
-        public PessoaTRA(IRedisCacheRepository redisCacheRepository)
+        public PersonTRA(IRedisCacheRepository redisCacheRepository)
         {
             _cacheService = redisCacheRepository;
             _mongoClient = new MongoClient(Environment.GetEnvironmentVariable("MONGO_URL"));
         }
 
-        public PessoaTRA() {}
-
-        public async Task InsertNewPerson(Pessoa person)
+        public async Task InsertNewPerson(Person person)
         {
             try
             {
@@ -30,7 +28,7 @@ namespace RinhaDeBackEnd2023.Business
 
                 await personRepository.InsertAsync(person);
 
-                if (await _cacheService.GetAsync<Pessoa>(person.Id.ToString()) is not null)
+                if (await _cacheService.GetAsync<Person>(person.Id.ToString()) is not null)
                     return;
 
                 _cacheService.SetAsync(person.Id.ToString(), person, TimeSpan.FromMinutes(1000));
@@ -41,14 +39,14 @@ namespace RinhaDeBackEnd2023.Business
             }
         }
 
-        public async Task<Pessoa> GetPersonById(string id)
+        public async Task<Person> GetPersonById(string id)
         {
             try
             {
-                PessoaDTO pessoa = await _cacheService.GetAsync<PessoaDTO>(id);
+                jsonPersonRequest pessoa = await _cacheService.GetAsync<jsonPersonRequest>(id);
                 
                 if (pessoa is not null)
-                    return new Pessoa(pessoa.apelido, pessoa.nome, pessoa.nascimento, pessoa.stack);
+                    return new Person(pessoa.apelido, pessoa.nome, pessoa.nascimento, pessoa.stack);
 
                 var database = _mongoClient.GetDatabase("RinhaDeBackend2023");
                 var repository = new PersonMongoRepository(database, "Person");
@@ -61,7 +59,7 @@ namespace RinhaDeBackEnd2023.Business
             }
         }
 
-        public async Task<IEnumerable<Pessoa>> GetPersonByTag(string tag)
+        public async Task<IEnumerable<Person>> GetPersonByTag(string tag)
         {
             try
             {

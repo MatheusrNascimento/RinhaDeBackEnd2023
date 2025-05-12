@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace RinhaDeBackEnd2023.Models
 {
-    public class Pessoa : BaseEntity
+    public class Person : BaseEntity
     {
         public string apelido { get; set; } = string.Empty;
         public string nome { get; set; } = string.Empty;
         public string nascimento { get; set; } = string.Empty;
         public string[] stack { get; set; }
 
-        public Pessoa(string nickname, string name, string birthdate, string[] stack = null)
+        public Person(string nickname, string name, string birthdate, string[] stack = null)
         {
             Id = Guid.NewGuid();
             this.apelido = nickname;

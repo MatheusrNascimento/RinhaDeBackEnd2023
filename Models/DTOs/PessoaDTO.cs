@@ -1,6 +1,6 @@
 namespace RinhaDeBackEnd2023.Models.DTOs
 {
-    public record PessoaDTO(
+    public record jsonPersonRequest(
         string nome,
         string apelido,
         string nascimento,

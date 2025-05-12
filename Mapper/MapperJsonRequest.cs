@@ -6,9 +6,9 @@ namespace RinhaDeBackEnd2023.Mapper
     public class MapperJsonRequest
     {
         
-        public static Pessoa MapPersonFromJsonRequest(PessoaDTO personJsonRequest)
+        public static Person MapPersonFromJsonRequest(jsonPersonRequest personJsonRequest)
         {
-            return new Pessoa
+            return new Person
             (
                 personJsonRequest.apelido,
                 personJsonRequest.nome,

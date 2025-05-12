@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace RinhaDeBackEnd2023.Business.FluentValidations
 {
-    public class ValidateJsonRequest : AbstractValidator<PessoaDTO>
+    public class ValidateJsonRequest : AbstractValidator<jsonPersonRequest>
     {
         public ValidateJsonRequest()
         {

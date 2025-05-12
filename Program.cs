@@ -2,9 +2,7 @@ using FluentValidation.Results;
 using RinhaDeBackEnd2023.Business.FluentValidations;
 using RinhaDeBackEnd2023.Models;
 using RinhaDeBackEnd2023.Business;
-using StackExchange.Redis;
 using RinhaDeBackEnd2023.Repository.Interfaces;
-using RinhaDeBackEnd2023.Repository;
 using RinhaDeBackEnd2023.Models.DTOs;
 
 namespace RinhaDeBackEnd2023
@@ -14,40 +12,17 @@ namespace RinhaDeBackEnd2023
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            var redis =  ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis"));
-
-            // Add services to the container.
-            builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
-            builder.Services.AddSingleton<IRedisCacheRepository, RedisCacheRepository>();
-            builder.Services.AddSingleton<PessoaTRA>();
-            builder.Services.AddAuthorization();
-
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
-                    });
-            });
-
-            // Add services to the container.
+            builder.ConfigureMiddlewares();
 
             var app = builder.Build();
-            // Configure the HTTP request pipeline.
+            app.ConfigureApp();
+           
 
-            app.UseCors("AllowAll");
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
-
-            app.MapPost("/pessoas", async (HttpContext context, PessoaDTO pessoa, IRedisCacheRepository _cache)  => {
+            app.MapPost("/person", async (HttpContext context, PersonTRA personTRA, jsonPersonRequest personRequest)  => {
 
                 try
                 {
-                    ValidationResult result = new ValidateJsonRequest().Validate(pessoa);
+                    ValidationResult result = new ValidateJsonRequest().Validate(personRequest);
 
                     if (!result.IsValid)
                     {
@@ -57,11 +32,11 @@ namespace RinhaDeBackEnd2023
                         });
                     }
 
-                    Pessoa person = Mapper.MapperJsonRequest.MapPersonFromJsonRequest(pessoa);
+                    Person person = Mapper.MapperJsonRequest.MapPersonFromJsonRequest(personRequest);
 
-                    await new PessoaTRA(_cache).InsertNewPerson(person);
+                    await personTRA.InsertNewPerson(person);
 
-                    context.Response.Headers.Append("Lacation", $"/pessoas/{person.Id}");
+                    context.Response.Headers.Append("Lacation", $"/persons/{person.Id}");
 
                     return Results.Created();
                 }
@@ -70,11 +45,11 @@ namespace RinhaDeBackEnd2023
                 }
             });
 
-            app.MapGet("/pessoas/{id}", async (string id, IRedisCacheRepository _cache) =>
+            app.MapGet("/person/{id}", async (string id, PersonTRA personTRA) =>
             {
                 try
                 {
-                    Pessoa person = await new PessoaTRA(_cache).GetPersonById(id);
+                    Person person = await personTRA.GetPersonById(id);
 
                     if (person is null)
                         return Results.Ok();
@@ -87,12 +62,12 @@ namespace RinhaDeBackEnd2023
                 }
             });
 
-            app.MapGet("/pessoas/t={t}", async ( IRedisCacheRepository _cache, string t) => {
+            app.MapGet("/person/t={t}", async (PersonTRA personTRA, string t) => {
                 try
                 {
-                    IEnumerable<Pessoa> pessoa = await new PessoaTRA(_cache).GetPersonByTag(t);
+                    IEnumerable<Person> person = await personTRA.GetPersonByTag(t);
 
-                    return Results.Ok(pessoa);
+                    return Results.Ok(person);
                 }
                 catch (Exception)
                 {
