@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using RinhaDeBackEnd2023.Business;
 using RinhaDeBackEnd2023.Repository;
 using RinhaDeBackEnd2023.Repository.Interfaces;

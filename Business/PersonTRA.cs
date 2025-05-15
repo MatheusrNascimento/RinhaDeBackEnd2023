@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using RinhaDeBackEnd2023.Models;
 using RinhaDeBackEnd2023.Models.DTOs;
 using RinhaDeBackEnd2023.Repository;

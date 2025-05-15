@@ -1,8 +1,7 @@
 using FluentValidation.Results;
+using RinhaDeBackEnd2023.Business;
 using RinhaDeBackEnd2023.Business.FluentValidations;
 using RinhaDeBackEnd2023.Models;
-using RinhaDeBackEnd2023.Business;
-using RinhaDeBackEnd2023.Repository.Interfaces;
 using RinhaDeBackEnd2023.Models.DTOs;
 
 namespace RinhaDeBackEnd2023

@@ -1,5 +1,3 @@
-
-
 using System.Text.Json;
 using RinhaDeBackEnd2023.Repository.Interfaces;
 using StackExchange.Redis;
