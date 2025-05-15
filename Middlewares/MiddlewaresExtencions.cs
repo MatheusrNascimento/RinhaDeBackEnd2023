@@ -17,7 +17,7 @@ namespace RinhaDeBackEnd2023
 
             builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
             builder.Services.AddSingleton<IRedisCacheRepository, RedisCacheRepository>();
-            builder.Services.AddSingleton<PersonTRA>();
+            builder.Services.AddScoped<PersonTRA>();
             builder.Services.AddAuthorization();
 
             builder.Services.AddCors(options =>
