@@ -27,7 +27,7 @@ services:
 
 
   mongo-rinha2023:
-    image: mongo
+    image: mongo:4.4
     container_name: mongo-rinha2023
     restart: always
     environment:
